@@ -1,5 +1,7 @@
 # Voice Typing App (WIP)
 
+![alt text](image.png)
+
 This is a true "build in public" attempt: usually I create private repositories and share stuff publicly if I have something half (or a quarter) working. I'm sharing this one essentially from the first rung of the ladder. 
 
 ## Why I'm Working On This
@@ -29,7 +31,42 @@ Over the course of the past year, my workflow has become "voice-default" - and I
 -  Transcribed just fine but stubbornly refused to type into text windows (a Wayland problem) 
 -  Occasionally worked but local STT was just so much worse than cloud STT that it wasn't worth it  
 
-At the brink of giving up, I decided to try this starter from [Deepgram](https://github.com/deepgram/voice-keyboard-linux). To my enormous suprise, it worked. Live text! Flowing into any window! In Wayland! 
+At the brink of giving up, I decided to try this starter from [Deepgram](https://github.com/deepgram/voice-keyboard-linux). To my enormous surprise, it worked. Live text! Flowing into any window! In Wayland!
+
+## Project Structure
+
+```
+Voice-Typing-Ubuntu-App/
+├── app/                    # Main application code (Rust)
+│   ├── src/               # Source files
+│   │   ├── main.rs        # Entry point with privilege handling
+│   │   ├── audio_input.rs # Audio capture via CPAL
+│   │   ├── stt_client.rs  # Deepgram WebSocket client
+│   │   ├── virtual_keyboard.rs # Virtual keyboard & typing logic
+│   │   └── input_event.rs # Linux input event definitions
+│   ├── Cargo.toml         # Dependencies and build config
+│   └── target/            # Build artifacts
+├── run.sh                 # Convenience script to build and run
+├── CLAUDE.md              # Project context for AI assistants
+└── README.md              # This file
+```
+
+## Quick Start
+
+1. Set your Deepgram API key:
+```bash
+export DEEPGRAM_API_KEY="your-api-key-here"
+```
+
+2. Run the application:
+```bash
+./run.sh --test-stt
+```
+
+The run script will automatically:
+- Create a Python virtual environment (for future GUI components)
+- Build the Rust application
+- Run with proper privilege handling (sudo for keyboard creation, drops to user for audio) 
 
 ## One Transcription / Dictation App 
 
