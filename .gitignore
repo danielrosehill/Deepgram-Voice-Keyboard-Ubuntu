@@ -1,0 +1,29 @@
+# Debian packaging artifacts
+debian-build/
+*.deb
+
+# Python virtual environment
+.venv/
+__pycache__/
+*.pyc
+
+# Rust build artifacts (in app/)
+app/target/
+app/Cargo.lock
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment files
+.env

@@ -6,7 +6,32 @@
 
 A system-level voice-to-text/dictation application for Ubuntu Linux using Deepgram's cloud STT API. Types wherever your cursor is - works across all applications on Wayland.
 
-## Quick Start
+## Installation
+
+### Option 1: Install from Debian Package (Recommended)
+
+1. Download the latest `.deb` package from [Releases](https://github.com/danielrosehill/Voice-Typing-Ubuntu-App/releases)
+
+2. Install:
+```bash
+sudo dpkg -i voice-keyboard_0.1.0_amd64.deb
+sudo apt-get install -f  # Fix dependencies if needed
+```
+
+3. Set your Deepgram API key:
+```bash
+export DEEPGRAM_API_KEY="your-api-key-here"
+# Add to ~/.bashrc or ~/.zshrc for persistence
+```
+
+4. Run:
+```bash
+voice-keyboard-launcher --test-stt
+```
+
+Or launch from your application menu.
+
+### Option 2: Build from Source
 
 1. Set your Deepgram API key:
 ```bash
@@ -22,6 +47,16 @@ The run script will automatically:
 - Create a Python virtual environment (for future GUI components)
 - Build the Rust application
 - Run with proper privilege handling (sudo for keyboard creation, drops to user for audio)
+
+### Building a Debian Package
+
+To build your own `.deb` package:
+
+```bash
+./build-deb.sh
+```
+
+See [PACKAGING.md](PACKAGING.md) for detailed packaging documentation.
 
 ## Validated
 
@@ -42,9 +77,11 @@ Voice-Typing-Ubuntu-App/
 │   │   └── input_event.rs # Linux input event definitions
 │   ├── Cargo.toml         # Dependencies and build config
 │   └── target/            # Build artifacts
+├── build-deb.sh           # Build Debian package
+├── update-package.sh      # Update version and rebuild
 ├── run.sh                 # Convenience script to build and run
 ├── CLAUDE.md              # AI assistant context
-├── PROJECT_NOTES.md       # Detailed project notes and roadmap
+├── PACKAGING.md           # Debian packaging documentation
 └── README.md              # This file
 ```
 
