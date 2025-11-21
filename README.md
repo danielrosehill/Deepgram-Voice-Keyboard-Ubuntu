@@ -53,7 +53,17 @@ The run script will automatically:
 To build your own `.deb` package:
 
 ```bash
+# Build only
 ./build-deb.sh
+
+# Build and install
+./build-deb.sh --install
+
+# Build and reinstall (removes old version first)
+./build-deb.sh --reinstall
+
+# Show help
+./build-deb.sh --help
 ```
 
 See [PACKAGING.md](PACKAGING.md) for detailed packaging documentation.

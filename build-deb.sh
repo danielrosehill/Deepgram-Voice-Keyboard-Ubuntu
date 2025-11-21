@@ -13,6 +13,39 @@ VERSION="0.1.0"
 ARCHITECTURE="amd64"
 MAINTAINER="Daniel Rosehill <public@danielrosehill.com>"
 
+# Parse command line arguments
+INSTALL_AFTER_BUILD=false
+REINSTALL=false
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -i|--install)
+      INSTALL_AFTER_BUILD=true
+      shift
+      ;;
+    -r|--reinstall)
+      REINSTALL=true
+      INSTALL_AFTER_BUILD=true
+      shift
+      ;;
+    -h|--help)
+      echo "Usage: $0 [OPTIONS]"
+      echo ""
+      echo "Options:"
+      echo "  -i, --install     Install the package after building"
+      echo "  -r, --reinstall   Remove old version and install the new package"
+      echo "  -h, --help        Show this help message"
+      echo ""
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $1"
+      echo "Use -h or --help for usage information"
+      exit 1
+      ;;
+  esac
+done
+
 echo "Building Debian package for Voice Keyboard v${VERSION}"
 echo "================================================"
 
@@ -199,12 +232,51 @@ if [ $? -eq 0 ]; then
   echo "Success! Package created:"
   echo "  ${PACKAGE_NAME}_${VERSION}_${ARCHITECTURE}.deb"
   echo ""
-  echo "To install:"
-  echo "  sudo dpkg -i ${PACKAGE_NAME}_${VERSION}_${ARCHITECTURE}.deb"
-  echo "  sudo apt-get install -f  # If there are dependency issues"
-  echo ""
-  echo "Package details:"
-  dpkg-deb --info "${PACKAGE_NAME}_${VERSION}_${ARCHITECTURE}.deb"
+
+  # Install if requested
+  if [ "$INSTALL_AFTER_BUILD" = true ]; then
+    if [ "$REINSTALL" = true ]; then
+      echo "Removing old version..."
+      sudo dpkg -r "$PACKAGE_NAME" 2>/dev/null || true
+      echo ""
+    fi
+
+    echo "Installing package..."
+    sudo dpkg -i "${PACKAGE_NAME}_${VERSION}_${ARCHITECTURE}.deb"
+
+    if [ $? -ne 0 ]; then
+      echo "Attempting to fix dependencies..."
+      sudo apt-get install -f -y
+    fi
+
+    # Verify installation
+    if dpkg -l | grep -q "^ii.*$PACKAGE_NAME"; then
+      echo ""
+      echo "================================================"
+      echo "Package installed successfully!"
+      echo ""
+      echo "Installed version:"
+      dpkg -l | grep "$PACKAGE_NAME"
+      echo ""
+      echo "To run:"
+      echo "  voice-keyboard-launcher --test-stt"
+      echo ""
+    else
+      echo ""
+      echo "Installation verification failed!"
+      exit 1
+    fi
+  else
+    echo "To install:"
+    echo "  sudo dpkg -i ${PACKAGE_NAME}_${VERSION}_${ARCHITECTURE}.deb"
+    echo "  sudo apt-get install -f  # If there are dependency issues"
+    echo ""
+    echo "Or rebuild with install:"
+    echo "  ./build-deb.sh --install"
+    echo ""
+    echo "Package details:"
+    dpkg-deb --info "${PACKAGE_NAME}_${VERSION}_${ARCHITECTURE}.deb"
+  fi
 else
   echo "Package build failed!"
   exit 1
