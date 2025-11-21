@@ -199,6 +199,13 @@ echo "Copying binary..."
 cp "$APP_DIR/target/release/voice-keyboard" "$BUILD_DIR/usr/bin/"
 chmod 755 "$BUILD_DIR/usr/bin/voice-keyboard"
 
+# Copy voice-dictation launcher if it exists
+if [ -f "$SCRIPT_DIR/voice-dictation" ]; then
+  echo "Copying voice-dictation launcher..."
+  cp "$SCRIPT_DIR/voice-dictation" "$BUILD_DIR/usr/bin/"
+  chmod 755 "$BUILD_DIR/usr/bin/voice-dictation"
+fi
+
 # Create wrapper script that handles privilege elevation
 echo "Creating wrapper script..."
 cat > "$BUILD_DIR/usr/bin/voice-keyboard-launcher" << 'EOF'

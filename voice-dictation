@@ -1,0 +1,22 @@
+#!/bin/bash
+# Voice Dictation Launcher with Menu
+
+clear
+echo "╔═══════════════════════════════════════════╗"
+echo "║   Voice Keyboard for Linux - Dictation   ║"
+echo "╚═══════════════════════════════════════════╝"
+echo ""
+echo "Starting voice dictation..."
+echo "Cost: ~\$0.0125 per minute"
+echo ""
+echo "Press Ctrl+C to stop and see session summary"
+echo "═══════════════════════════════════════════"
+echo ""
+
+# Launch the voice keyboard
+voice-keyboard-launcher
+
+# Show exit message
+echo ""
+echo "Dictation session ended."
+echo "═══════════════════════════════════════════"
